@@ -8,9 +8,9 @@ function Home() {
     return (
         <div className='font-appFont'>
             <Header />
-            {/* <Body />
-            <Footer /> */}
-            <Signup />
+            <Body />
+            <Footer />
+            {/* <Signup /> */}
         </div>
     )
 }
