@@ -47,17 +47,34 @@ router.post('/userLogin', async (req, res) => {
 
 router.post('/profileUpdate', authenticateToken, upload.fields([{ name: 'profilePicture', maxCount: 1 }]), async (req, res) => {
     const { username, fullname, bio } = req.body;
+    const updateData = { username, fullname, bio };
+
     try {
-        const image = await uploadOnCloudinay(req.files.profilePicture[0].path);
-        const user = await User.findByIdAndUpdate(req.user, { username, profilePicture: image.url, fullname, bio }, { new: true });
+        // Check if a profile picture is provided
+        if (req.files.profilePicture && req.files.profilePicture.length > 0) {
+            const image = await uploadOnCloudinay(req.files.profilePicture[0].path);
+            updateData.profilePicture = image.url; // Add profile picture to update data
+        }
+
+        const user = await User.findByIdAndUpdate(req.user, updateData, { new: true });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        res.status(201).json({ message: "profile updated successfully", res: user });
+
+        res.status(200).json({ message: "Profile updated successfully", res: user });
     } catch (err) {
         console.error('Error saving user:', err);
-        res.status(400).json(err);
+        res.status(400).json({ message: 'Error updating profile', error: err });
     }
+});
+
+// handling search
+router.get('/search/:usernametosearch', authenticateToken, async (req, res) => {
+    const { usernametosearch } = req.params;
+    const users = await User.find({ $or: [{ username: { $regex: usernametosearch, $options: 'i' } }, { fullname: { $regex: usernametosearch, $options: 'i' } }] }).select('-password');
+    res.status(200).json(users);
 })
+
+
 
 export default router;

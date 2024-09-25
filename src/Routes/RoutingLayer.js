@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import Signup from '../components/Home/Signup/Signup';
 import Login from '../components/Home/Login/Login';
+import Feed from '../components/body/Feed/Feed';
 // import Home from './components/routes/home';
 // import About from './components/routes/about';
 // import Contact from './components/routes/contact';
@@ -16,6 +17,7 @@ const RoutingLayer = () => (
             </Suspense>} />
             <Route path="/sign-up" element={<Signup />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/feed" element={<Feed />} />
         </Routes>
     </BrowserRouter>
 );

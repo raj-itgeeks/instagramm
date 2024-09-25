@@ -1,16 +1,31 @@
 import React from 'react'
-import Button from '../utils/Button'
-import Input from '../utils/Input'
-import logo from './clothinghub.png'
 import { IoIosLogIn } from "react-icons/io";
-import Navigation from './navigation/Navigation';
 function Header() {
+    // Modified code to apply debouncing
+    let timeoutId;
+    const handleSearch = (query) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            try {
+                fetch(`http://localhost:8080/search/${query}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    }
+                }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err));
+            } catch (err) {
+                console.log(err)
+            }
+        }, 500);
+    }
     return (
         <div className='m-0 bg-[#2E4053] text-[#ffffff] py-[10px] z-10 sticky top-0 shadow-md px-[20px] '>
             <div className='flex justify-between'>
-                <div><h1 className='font-logoFont text-[26px] cursor-pointer select-none'>CLOTHING HUB</h1></div>
-                <Navigation />
-                <div className='flex cursor-pointer items-center text-[20px] gap-2'><IoIosLogIn /></div>
+                <div><h1 className='font-logoFont text-[26px] cursor-pointer select-none'>FocalPoint</h1></div>
+                {/* <Navigation /> */}
+                <div className='flex cursor-pointer items-center text-[20px] gap-2'>
+                    <div><input type="search" className='rounded text-black px-2 py-1 outline-none active:outline-none' onChange={(e) => { handleSearch(e.target.value) }} /></div>
+                    <IoIosLogIn /></div>
             </div>
         </div>
     )

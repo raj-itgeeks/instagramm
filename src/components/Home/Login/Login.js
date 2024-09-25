@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 
 function Login() {
     const [formData, setFormData] = useState({});
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const handleSubmit = () => {
         fetch('http://localhost:8080/userLogin', {
             method: 'POST',
