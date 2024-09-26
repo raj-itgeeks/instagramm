@@ -14,7 +14,7 @@ router.post('/follow', authenticateToken, async (req, res) => {
 })
 
 //api to get following list of a user
-router.get('/following', authenticateToken, async (req, res) => {
+router.get('/followingandfollowerscounts', authenticateToken, async (req, res) => {
     const userId = req.user; // User who is authenticated
     try {
         const channel = await User.aggregate([
@@ -66,35 +66,68 @@ router.get('/following', authenticateToken, async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 });
-router.get('/followingList', authenticateToken, async (req, res) => {
+router.get('/followersList', authenticateToken, async (req, res) => {
     try {
         const userId = req.user;
-        const followingList = await User.aggregate([
+        const followingList = await Follower.aggregate([
             {
                 $match: {
-                    _id: new mongoose.Types.ObjectId(userId)
+                    follower: new mongoose.Types.ObjectId(userId)
                 }
             },
             {
                 $lookup: {
-                    from: "followers", // Refers to the Users collection
-                    localField: "_id", // Assuming the field name is followingUser
-                    foreignField: "following",
-                    as: "followingUser"
+                    from: "users", // Refers to the Users collection
+                    localField: "following", // Assuming the field name is follower
+                    foreignField: "_id",
+                    as: "followerDetails"
                 }
             },
             {
-                $unwind: "$followingUser" // Unwind the followingUser array
-            },
-            {
-                $addFields: {
-                    followingList: '$followingUser' // Count of users being followed
-                }
+                $unwind: "$followerDetails" // Unwind the followerDetails array
             },
             {
                 $project: {
-                    fullName: 1,
-                    username: 1,
+                    _id: "$followerDetails._id",
+                    fullName: "$followerDetails.fullName",
+                    username: "$followerDetails.username",
+                    email: "$followerDetails.email"
+                }
+            }
+        ])
+
+        console.log(followingList);
+        return res.status(200).json({ message: "User following list fetched successfully", followingList });
+    } catch (err) {
+        console.error('Error fetching following data:', err);
+    }
+})
+router.get('/followingList', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user;
+        const followingList = await Follower.aggregate([
+            {
+                $match: {
+                    following: new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $lookup: {
+                    from: "users", // Refers to the Users collection
+                    localField: "follower", // Assuming the field name is follower
+                    foreignField: "_id",
+                    as: "followerDetails"
+                }
+            },
+            {
+                $unwind: "$followerDetails" // Unwind the followerDetails array
+            },
+            {
+                $project: {
+                    _id: "$followerDetails._id",
+                    fullName: "$followerDetails.fullName",
+                    username: "$followerDetails.username",
+                    email: "$followerDetails.email"
                 }
             }
         ])

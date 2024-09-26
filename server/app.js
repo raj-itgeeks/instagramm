@@ -4,6 +4,7 @@ import cors from 'cors';
 import connectDB from './db/index.js';
 import userRoutes from './routers/user.router.js';
 import followerRoutes from './routers/follower.router.js';
+import postRoutes from './routers/post.router.js';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -18,3 +19,4 @@ app.use(express.json());
 // use userRoutes
 app.use(userRoutes);
 app.use(followerRoutes);
+app.use(postRoutes);
