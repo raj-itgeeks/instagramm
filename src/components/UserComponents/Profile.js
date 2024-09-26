@@ -93,14 +93,13 @@ function Profile() {
                     <div className='h-[128px]  w-[128px] '>
                         <img onClick={() => { if (image) setIsPopUp(true) }} className='rounded-[100%] border-[2px] border-spacing-1 shadow-sm h-full w-full' src={image} alt="" />
                     </div>
-
                     <div className='absolute top-[100px] right-2'>
                         <label htmlFor='image1'><RiImageAddLine /></label>
                         <input type='file' id='image1' style={{ display: "none" }} accept="image/png, image/gif, image/jpeg,image/jpg" onInput={(e) => { handleImageChange(e) }} />
                     </div>
                 </div>
                 <div className='border rounded-md w-full flex gap-5 text-sm justify-center'>
-                    <div onClick={()=>{navigate('/home/followersList')}}  className='flex flex-col gap-1 items-center justify-center'>
+                    <div onClick={() => { navigate('/home/followersList') }} className='flex flex-col gap-1 items-center justify-center'>
                         <span>
                             {followersCount || ""}
                         </span>
