@@ -3,6 +3,7 @@ import Signup from '../components/Signup/Signup';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import Home from '../components/Home/Home';
+import Profile from '../components/UserComponents/Profile';
 const RoutingLayer = () => {
     const location = useLocation();
     const isLoginPage = location.pathname === '/login';
@@ -10,7 +11,7 @@ const RoutingLayer = () => {
         <>
             {!isLoginPage && <Header />}
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Profile />} />
                 <Route path="/login" element={<Signup />} />
             </Routes>
             {!isLoginPage && <Footer />}
